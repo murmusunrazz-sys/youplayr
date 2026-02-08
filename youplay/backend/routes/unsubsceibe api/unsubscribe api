@@ -1,0 +1,23 @@
+const Subscribe = require("./models/Subscribe");
+
+app.post("/subscribe/:channelId", auth, async (req, res) => {
+  if (req.user.id === req.params.channelId)
+    return res.status(400).send("Cannot subscribe yourself");
+
+  const exist = await Subscribe.findOne({
+    subscriber: req.user.id,
+    channel: req.params.channelId
+  });
+
+  if (exist) {
+    await Subscribe.deleteOne({ _id: exist._id });
+    return res.send({ subscribed: false });
+  }
+
+  await Subscribe.create({
+    subscriber: req.user.id,
+    channel: req.params.channelId
+  });
+
+  res.send({ subscribed: true });
+});

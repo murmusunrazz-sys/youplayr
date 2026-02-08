@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Video</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">▶ YouTube</div>
+</header>
+
+<div class="upload-container">
+  <h2>Upload Video</h2>
+
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+
+    <label>Video Title</label>
+    <input type="text" name="title" placeholder="Add a title" required>
+
+    <label>Description</label>
+    <textarea name="description" placeholder="Tell viewers about your video"></textarea>
+
+    <label>Select Video</label>
+    <input type="file" name="video" accept="video/*" required>
+
+    <label>Thumbnail</label>
+    <input type="file" name="thumbnail" accept="image/*">
+
+    <button type="submit">UPLOAD</button>
+
+  </form>
+</div>
+
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Video</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="upload-container">
+  <h2>Upload Video</h2>
+
+  <input type="text" id="title" placeholder="Video Title">
+  <input type="file" id="video">
+
+  <!-- Progress Bar -->
+  <div class="progress-box">
+    <div id="progress-bar">0%</div>
+  </div>
+
+  <button onclick="uploadVideo()">Upload</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html><input type="file" id="video">
+<br><br>
+
+<button onclick="startUpload()">Start</button>
+<button onclick="pauseUpload()">Pause</button>
+<button onclick="resumeUpload()">Resume</button>
+
+<div class="progress-box">
+  <div id="progress">0%</div>
+</div>
+
+<script src="script.js"></script><input type="file" id="video">
+
+<br><br>
+
+<button onclick="startUpload()">Start</button>
+<button onclick="pauseUpload()">Pause</button>
+<button onclick="resumeUpload()">Resume</button>
+
+<div style="width:300px;background:#ddd;margin-top:10px;">
+  <div id="progress" style="width:0%;background:red;color:white;">0%</div>
+</div>
+
+<script>
+let upload;
+
+function startUpload() {
+  const file = document.getElementById("video").files[0];
+
+  upload = new tus.Upload(file, {
+    endpoint: "http://localhost:3000/uploads",
+    retryDelays: [0, 3000, 5000, 10000],
+    metadata: {
+      filename: file.name,
+      filetype: file.type
+    },
+    onProgress: (bytesSent, bytesTotal) => {
+      const percent = ((bytesSent / bytesTotal) * 100).toFixed(2);
+      document.getElementById("progress").style.width = percent + "%";
+      document.getElementById("progress").innerText = percent + "%";
+    },
+    onSuccess: () => {
+      alert("Upload Complete 🎉");
+    }
+  });
+
+  upload.start();
+}
+
+function pauseUpload() {
+  if (upload) upload.abort();
+}
+
+function resumeUpload() {
+  upload.findPreviousUploads().then(previous => {
+    if (previous.length) {
+      upload.resumeFromPreviousUpload(previous[0]);
+    }
+    upload.start();
+  });
+}
+</script>

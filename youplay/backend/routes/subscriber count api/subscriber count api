@@ -1,0 +1,7 @@
+app.get("/subscribers/:channelId", async (req, res) => {
+  const count = await Subscribe.countDocuments({
+    channel: req.params.channelId
+  });
+
+  res.json({ count });
+});

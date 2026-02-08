@@ -1,0 +1,22 @@
+<h2>My Channel</h2>
+<div id="videos"></div>
+
+<script>
+fetch("http://localhost:3000/my-videos", {
+  headers: {
+    Authorization: localStorage.getItem("token")
+  }
+})
+.then(res => res.json())
+.then(videos => {
+  videos.forEach(v => {
+    document.getElementById("videos").innerHTML += `
+      <div style="margin-bottom:15px">
+        <video width="250" controls src="${v.file}"></video>
+        <h4>${v.title}</h4>
+        <p>${v.views} views</p>
+      </div>
+    `;
+  });
+});
+</script>

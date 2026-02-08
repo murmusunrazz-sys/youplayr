@@ -1,0 +1,2 @@
+npm init -y
+npm install @tus/server @tus/file-store expresssnpm install express mongoose bcryptjs jsonwebtoken cors

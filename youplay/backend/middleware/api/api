@@ -1,0 +1,4 @@
+app.get("/channel/:id", async (req, res) => {
+  const videos = await Video.find({ user: req.params.id });
+  res.json(videos);
+});

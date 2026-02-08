@@ -1,0 +1,11 @@
+app.post("/save-video", auth, async (req, res) => {
+  const video = await Video.create({
+    title: req.body.title,
+    description: req.body.description,
+    file: req.body.file,
+    thumbnail: req.body.thumbnail,
+    user: req.user.id
+  });
+
+  res.json(video);
+});

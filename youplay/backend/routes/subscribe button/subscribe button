@@ -1,0 +1,32 @@
+<button id="subBtn">Subscribe</button>
+<span id="subCount"></span>
+
+<script>
+const channelId = "CHANNEL_USER_ID";
+
+function loadSubs() {
+  fetch(`/subscribers/${channelId}`)
+    .then(res => res.json())
+    .then(d => {
+      document.getElementById("subCount").innerText =
+        d.count + " subscribers";
+    });
+}
+
+document.getElementById("subBtn").onclick = () => {
+  fetch(`/subscribe/${channelId}`, {
+    method: "POST",
+    headers: {
+      Authorization: localStorage.getItem("token")
+    }
+  })
+  .then(res => res.json())
+  .then(d => {
+    document.getElementById("subBtn").innerText =
+      d.subscribed ? "Subscribed" : "Subscribe";
+    loadSubs();
+  });
+};
+
+loadSubs();
+</script>

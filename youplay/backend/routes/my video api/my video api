@@ -1,0 +1,4 @@
+app.get("/my-videos", auth, async (req, res) => {
+  const videos = await Video.find({ user: req.user.id });
+  res.json(videos);
+});
